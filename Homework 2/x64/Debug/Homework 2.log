@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\Users\Daniel\Desktop\Daniel M\USA\UCSC\2022-3 (Fall)\Fundamentals of Game Engineering\Assignments\Homework 2\Homework 2\main.cpp(130,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Daniel\Desktop\Daniel M\USA\UCSC\2022-3 (Fall)\Fundamentals of Game Engineering\Assignments\Homework 2\Homework 2\main.cpp(131,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Homework 2.vcxproj -> C:\Users\Daniel\Desktop\Daniel M\USA\UCSC\2022-3 (Fall)\Fundamentals of Game Engineering\Assignments\Homework 2\x64\Debug\Homework 2.exe
