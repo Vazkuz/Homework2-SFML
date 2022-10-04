@@ -35,6 +35,7 @@ void handleUp();
 void handleDown();
 void saveScreenshot(const RenderWindow& window);
 void saveLevel();
+void loadLevel();
 void updateTileMap(int cursorGridPosX, int cursorGridPosY, float posX, float posY);
 void eraseTile(int cursorGridPosX, int cursorGridPosY);
 
@@ -117,6 +118,11 @@ void handleInput(RenderWindow& window, Event e) {
     // Saving level by pressing 'S'
     if (Keyboard::isKeyPressed(Keyboard::S)) {
         saveLevel();
+    }
+
+    // Loading level by pressing 'L
+    if (Keyboard::isKeyPressed(Keyboard::L)) {
+        loadLevel();
     }
 
 }
@@ -221,7 +227,39 @@ void saveLevel() {
         myfile.close();
         cout << "File was successfully saved in Levels/" << filename << ".txt" << endl;
     }
+    else cout << "Unable to save file";
+
+}
+void loadLevel() {
+    string filename;
+    cout << "Enter a name to open a level: ";
+    cin >> filename;
+    fstream myfile;
+    myfile.open("Levels/" + filename + ".txt", ios::in);
+    if (myfile.is_open())
+    {
+        string tp;
+        while (getline(myfile, tp)) { //read data from file object and put it into string.
+            vector<string> words{};
+            size_t pos = 0;
+            //cout << tp << "xd" << "\n"; //print the data of the string
+            while ((pos = tp.find(" ")) != string::npos) {
+                words.push_back(tp.substr(0, pos));
+                tp.erase(0, pos + 1);
+            }
+            for (const auto& str : words) {
+                cout << str << endl;
+            }
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            cout << words[0] << endl;
+        }
+        myfile.close(); //close the file object.
+        cout << "File was successfully load from Levels/" << filename << ".txt" << endl;
+    }
     else cout << "Unable to open file";
+
 
 }
 
