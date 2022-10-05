@@ -208,57 +208,75 @@ void saveScreenshot(const RenderWindow& window) {
     string filename;
     cout << "Enter a name for your screenshot: ";
     cin >> filename;
-    texture.copyToImage().saveToFile("Screenshots/" + filename);
-    std::cout << "Screenshot saved to " << "Screenshots/" << filename << std::endl;
+    texture.copyToImage().saveToFile("Screenshots/" + filename + ".png");
+    std::cout << "Screenshot saved to " << "Screenshots/" << filename << ".png" << std::endl;
 }
 void saveLevel() {
     string filename;
+    // Player chooses a name to save level
     cout << "Enter a name to save your level: ";
     cin >> filename;
+    // The file is created.
     ofstream myfile("Levels/"+ filename + ".txt");
     if (myfile.is_open())
     {
         for (int j = 0; j < windowTileHeight; j++) {
             for (int i = 0; i < windowTileWidth; i++) {
+                // Saving info from tileMap to the file
                 myfile << tileMap[i][j] << " ";
             }
+            // Giving format at the end of each line [more readibility]
             myfile << '\n';
         }
         myfile.close();
-        cout << "File was successfully saved in Levels/" << filename << ".txt" << endl;
+        cout << "File was successfully saved in Levels/" << filename << ".txt" << endl; // Letting the player know everything went smoothly
     }
-    else cout << "Unable to save file";
+    else cout << "Unable to save file"; // Something bad happened
 
 }
 void loadLevel() {
     string filename;
-    cout << "Enter a name to open a level: ";
+    // Player chooses the name of the level they want to load
+    cout << "Enter the name of the level you want to open: ";
     cin >> filename;
     fstream myfile;
+    // The file is opened
     myfile.open("Levels/" + filename + ".txt", ios::in);
     if (myfile.is_open())
     {
         string tp;
+        int counter_j = 0;
         while (getline(myfile, tp)) { //read data from file object and put it into string.
-            vector<string> words{};
+            vector<string> tileMapElements{};
             size_t pos = 0;
-            //cout << tp << "xd" << "\n"; //print the data of the string
+            int counter_i = 0;
+            // Getting the tilemapelements (remember that the elements are separated by spaces)
             while ((pos = tp.find(" ")) != string::npos) {
-                words.push_back(tp.substr(0, pos));
+                tileMapElements.push_back(tp.substr(0, pos));
                 tp.erase(0, pos + 1);
             }
-            for (const auto& str : words) {
-                cout << str << endl;
+            // Using those elements to update the tilemap 
+            for (const auto& str : tileMapElements) {
+                tileMap[counter_i][counter_j] = stoi(str);
+                int x = tileMap[counter_i][counter_j] / 21;
+                int y = tileMap[counter_i][counter_j] % 21;
+                // And of course updating the sprites from the level (the ones the player sees on the window)
+                // But remember, "-1" in the tilemap means that the grid cell is empty
+                if (tileMap[counter_i][counter_j] < 0) {
+                    levelSprite[counter_i][counter_j] = emptySprite; // So we use the emptySprite in those situations
+                }
+                else {
+                    levelSprite[counter_i][counter_j].setTexture(tileTextureArray[x][y]); // And in every other case we set the new texture
+                }
+                levelSprite[counter_i][counter_j].setPosition(counter_i * 70.f, counter_j * 70.f);
+                counter_i++;
             }
-            cout << endl;
-            cout << endl;
-            cout << endl;
-            cout << words[0] << endl;
+            counter_j++;
         }
         myfile.close(); //close the file object.
-        cout << "File was successfully load from Levels/" << filename << ".txt" << endl;
+        cout << "File was successfully load from Levels/" << filename << ".txt" << endl; // Letting know the player everything is going to be ok. For now.
     }
-    else cout << "Unable to open file";
+    else cout << "Unable to open file"; // Letting know the player something went wrong. :(
 
 
 }
@@ -267,7 +285,7 @@ void updateTileMap(int cursorGridPosX, int cursorGridPosY, float posX, float pos
     // Update tilemap
     tileMap[cursorGridPosX][cursorGridPosY] = tileIndexRow * nCols + tileIndexCol;
 
-    // Update texture and sprites on level
+    // Update texture and sprites on level in the grid cell where the mouse is currently
     levelSprite[cursorGridPosX][cursorGridPosY].setTexture(tileTextureArray[tileIndexRow][tileIndexCol]);
     levelSprite[cursorGridPosX][cursorGridPosY].setPosition(posX, posY);
 }
